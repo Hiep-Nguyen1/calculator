@@ -1,35 +1,28 @@
-function createButtons () {
-    let buttons = document.querySelector(".buttons");
-    for(let i = 0; i < 16; i++){
-        const button = document.createElement('button');
-        button.style.cssText = 'background-color: grey'
-        buttons.appendChild(button);
-    }
-}
-
 const calcInfo = {
-    currentNum: null,
-    operator: null,
-    secondNum: null
+    displayNum: '',
+    firstNum: '',
+    operator: '',
+    secondNum: ''
 }
+const display = document.querySelector('.display');
 
-function add (calcInfo){
-    return calcInfo.currentNum + calcInfo.secondNum;
+function add (calcInfo){    //unary plus operator converts string to numbers
+    return +calcInfo.firstNum + +calcInfo.secondNum; 
 }
 
 function subtract (calcInfo){
-    return calcInfo.currentNum - calcInfo.secondNum;
+    return +calcInfo.firstNum - +calcInfo.secondNum;
 }
 
 function divide (calcInfo){
-    return (calcInfo.currentNum / calcInfo.secondNum).toFixed(3);
+    return (+calcInfo.firstNum / +calcInfo.secondNum).toFixed(3);
 }
 
 function multiply (calcInfo){
-    return calcInfo.currentNum * calcInfo.secondNum;
+    return +calcInfo.firstNum * +calcInfo.secondNum;
 }
 
-function operator(calcInfo){
+function operate(calcInfo){
     switch (calcInfo.operator){
         case 'add':
             return add(calcInfo);
@@ -49,4 +42,12 @@ function operator(calcInfo){
     }
 }
 
-createButtons();
+function buttonPress() {
+    display.textContent += this.textContent;
+}
+
+(()=> {
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => button.addEventListener('click', buttonPress))
+
+})();
