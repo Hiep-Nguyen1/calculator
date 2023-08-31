@@ -42,12 +42,22 @@ function operate(calcInfo){
     }
 }
 
-function buttonPress() {
-    display.textContent += this.textContent;
+function numberPress() {
+    calcInfo.displayNum += this.textContent;
+    display.textContent = calcInfo.displayNum;
+}
+
+function operatorPress() {
+    if(calcInfo.operator === '') {
+        calcInfo.operator = this.textContent;
+        
+    }
 }
 
 (()=> {
-    const buttons = document.querySelectorAll('button');
-    buttons.forEach(button => button.addEventListener('click', buttonPress))
+    const numbers = document.querySelectorAll('.number');
+    numbers.forEach(number => number.addEventListener('click', numberPress))
 
+    const operators = document.querySelectorAll('.operators');
+    operators.forEach(operator => operator.addEventListener('click', operatorPress))
 })();
