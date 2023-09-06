@@ -6,37 +6,45 @@ const calcInfo = {
 }
 const display = document.querySelector('.display');
 
-function add (calcInfo){    //unary plus operator converts string to numbers
-    return +calcInfo.firstNum + +calcInfo.secondNum; 
+function add (a,b){    //unary plus operator converts string to numbers
+    return +a + +b; 
 }
 
-function subtract (calcInfo){
-    return +calcInfo.firstNum - +calcInfo.secondNum;
+function subtract (a,b){
+    return +a - +b;
 }
 
-function divide (calcInfo){
-    return (+calcInfo.firstNum / +calcInfo.secondNum).toFixed(3);
+function divide (a,b){
+    return (+a / +b).toFixed(3);
 }
 
-function multiply (calcInfo){
-    return +calcInfo.firstNum * +calcInfo.secondNum;
+function multiply (a,b){
+    return +a * +b;
 }
 
-function operate(calcInfo){
-    switch (calcInfo.operator){
+function operate(operator){
+    calcInfo.secondNum = calcInfo.storedNum;
+    calcInfo.storedNum = '';
+    switch (operator){
         case '+':
-            return add(calcInfo);
+            calcInfo.firstNum = add(calcInfo.firstNum,calcInfo.secondNum);
             break;
         case '-':
-            return subtract(calcInfo);
+            calcInfo.firstNum = subtract(calcInfo.firstNum,calcInfo.secondNum);
             break;
         case '/':
-            return divide(calcInfo);
+            calcInfo.firstNum = divide(calcInfo.firstNum,calcInfo.secondNum);
             break;
         case '*':
-            return multiply(calcInfo);
+            calcInfo.firstNum = multiply(calcInfo.firstNum,calcInfo.secondNum);
             break;
+        default:
+            alert("Error in calculation statement.");
+            
+            return;
     }
+    semiClear();
+    console.log(calcInfo.firstNum);
 }
 
 function numberPress() {
@@ -50,33 +58,38 @@ function semiClear() {
 }
 
 function operatorPress() {
-    if(calcInfo.operator === '' && calcInfo.firstNum === '') {
+    if(this.textContent === '='){
+        operate(calcInfo.operator);
+        display.textContent = calcInfo.firstNum;
+    }
+    else if(calcInfo.operator === '' && calcInfo.firstNum === '') {
         calcInfo.firstNum = calcInfo.storedNum;
         calcInfo.operator = this.textContent;
         display.textContent += calcInfo.operator;
         calcInfo.storedNum = '';
 
-    }    
+    }        
+    else if(calcInfo.operator === '' && calcInfo.firstNum != ''){
+        calcInfo.operator = this.textContent;
+        display.textContent += calcInfo.operator;
+    } 
     else if (calcInfo.operator != '' && calcInfo.secondNum === '' && calcInfo.storedNum === ''){
         calcInfo.operator = this.textContent;
         display.textContent = display.textContent.slice(0,-1) + calcInfo.operator; //will remove the previous operation on this display and add the new one.
     }
-    else if (calcInfo.operator != '' && calcInfo.storedNum != '') {
-        calcInfo.secondNum = calcInfo.storedNum;
-        calcInfo.firstNum = operate(calcInfo);
-        semiClear();
-        calcInfo.storedNum = ''
+    else if (calcInfo.operator != '' && calcInfo.storedNum != '') { //will calculate previous statement and assign current operator
+        operate(calcInfo.operator);
         calcInfo.operator = this.textContent;
+        console.log(calcInfo.operator);
         display.textContent += calcInfo.operator;
-        console.log(calcInfo.firstNum);
     }
     
 }
 
 (()=> {
     const numbers = document.querySelectorAll('.number');
-    numbers.forEach(number => number.addEventListener('click', numberPress))
+    numbers.forEach(number => number.addEventListener('click', numberPress));
 
     const operators = document.querySelectorAll('.operator');
-    operators.forEach(operator => operator.addEventListener('click', operatorPress))
+    operators.forEach(operator => operator.addEventListener('click', operatorPress));
 })();
