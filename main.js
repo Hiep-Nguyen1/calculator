@@ -40,7 +40,7 @@ function operate(operator){
             calcInfo.firstNum = subtract(calcInfo.firstNum,calcInfo.secondNum);
             break;
         case '/':
-            if (calcInfo.secondNum === 0){                              //Checks for division by 0
+            if (calcInfo.secondNum === 0){ //Checks for division by 0
                 alert("Silly you, you can't divide by zero.");
                 display.textContent = display.textContent.slice(0,-1); //removes 0 from display
                 calcInfo.secondNum = null;
@@ -53,7 +53,6 @@ function operate(operator){
             break;
         default:
             alert("Error in calculation statement.");
-            
             return;
     }
     semiClear();
@@ -75,7 +74,7 @@ function operatorPress() {
         operate(calcInfo.operator);
         display.textContent = calcInfo.firstNum;
     }
-    else if(calcInfo.operator === '' && calcInfo.firstNum === null) { //stores value of first num and operator, then preps for second num.
+    else if(calcInfo.operator === '' && calcInfo.firstNum === null) { //stores value of first num and operator.
         console.log(calcInfo.firstNum + calcInfo.operator + calcInfo.secondNum);
         calcInfo.firstNum = parseInt(calcInfo.storedNum);
         calcInfo.operator = this.textContent;
@@ -84,16 +83,18 @@ function operatorPress() {
         console.log(calcInfo.firstNum + calcInfo.operator + calcInfo.secondNum);
 
     }        
-    else if(calcInfo.operator === '' && calcInfo.firstNum != null){ //use case for after = button is clicked.
+    else if(calcInfo.operator === '' && calcInfo.firstNum != null){ //use case for after = button is clicked, stores value of first num and operator.
+        calcInfo.firstNum = parseInt(calcInfo.firstNum + calcInfo.storedNum);
         calcInfo.operator = this.textContent;
         display.textContent += calcInfo.operator;
+        calcInfo.storedNum = '';
     } 
     else if (calcInfo.operator != '' && calcInfo.secondNum === null && calcInfo.storedNum === ''){ //will remove the previous operation on this display and add the new one.
         console.log(calcInfo.firstNum + calcInfo.operator + calcInfo.secondNum);
         calcInfo.operator = this.textContent;
         display.textContent = display.textContent.slice(0,-1) + calcInfo.operator; 
     }
-    else if (calcInfo.operator != '' && calcInfo.storedNum != null) { //will calculate previous statement and assign current operator, allowing user to continue string of operations.
+    else if (calcInfo.operator != '' && calcInfo.storedNum != '') { //will calculate previous statement and assign current operator, allowing user to continue string of operations.
         operate(calcInfo.operator);
         calcInfo.operator = this.textContent;
         display.textContent += calcInfo.operator;
