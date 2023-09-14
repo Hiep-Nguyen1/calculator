@@ -1,30 +1,37 @@
 const calcInfo = {
     storedNum: '',
-    firstNum: '',
+    firstNum: null,
     operator: '',
-    secondNum: ''
+    secondNum: null
 }
 const display = document.querySelector('.display');
 
-function add (a,b){    //unary plus operator converts string to numbers
-    return +a + +b; 
+function add (a,b){
+    return a + b; 
 }
 
 function subtract (a,b){
-    return +a - +b;
+    return a - b;
 }
 
 function divide (a,b){
-    return (+a / +b).toFixed(3);
+    if (a%b != 0){
+        return parseFloat(a/b).toFixed(2);
+    }
+    else {
+        return (a/b);
+    }
+    
 }
 
 function multiply (a,b){
-    return +a * +b;
+    return a * b;
 }
 
 function operate(operator){
-    calcInfo.secondNum = calcInfo.storedNum;
+    calcInfo.secondNum = parseInt(calcInfo.storedNum);
     calcInfo.storedNum = '';
+    console.log(calcInfo.firstNum + calcInfo.operator + calcInfo.secondNum);
     switch (operator){
         case '+':
             calcInfo.firstNum = add(calcInfo.firstNum,calcInfo.secondNum);
@@ -33,6 +40,12 @@ function operate(operator){
             calcInfo.firstNum = subtract(calcInfo.firstNum,calcInfo.secondNum);
             break;
         case '/':
+            if (calcInfo.secondNum === 0){                              //Checks for division by 0
+                alert("Silly you, you can't divide by zero.");
+                display.textContent = display.textContent.slice(0,-1); //removes 0 from display
+                calcInfo.secondNum = null;
+                return;
+            }
             calcInfo.firstNum = divide(calcInfo.firstNum,calcInfo.secondNum);
             break;
         case '*':
@@ -54,33 +67,35 @@ function numberPress() {
 
 function semiClear() {
     calcInfo.operator = '';
-    calcInfo.secondNum = '';
+    calcInfo.secondNum = null;
 }
 
 function operatorPress() {
-    if(this.textContent === '='){
+    if(this.textContent === '='){ //if = is clicked, calculates and resets display screen to resulting num.
         operate(calcInfo.operator);
         display.textContent = calcInfo.firstNum;
     }
-    else if(calcInfo.operator === '' && calcInfo.firstNum === '') {
-        calcInfo.firstNum = calcInfo.storedNum;
+    else if(calcInfo.operator === '' && calcInfo.firstNum === null) { //stores value of first num and operator, then preps for second num.
+        console.log(calcInfo.firstNum + calcInfo.operator + calcInfo.secondNum);
+        calcInfo.firstNum = parseInt(calcInfo.storedNum);
         calcInfo.operator = this.textContent;
         display.textContent += calcInfo.operator;
         calcInfo.storedNum = '';
+        console.log(calcInfo.firstNum + calcInfo.operator + calcInfo.secondNum);
 
     }        
-    else if(calcInfo.operator === '' && calcInfo.firstNum != ''){
+    else if(calcInfo.operator === '' && calcInfo.firstNum != null){ //use case for after = button is clicked.
         calcInfo.operator = this.textContent;
         display.textContent += calcInfo.operator;
     } 
-    else if (calcInfo.operator != '' && calcInfo.secondNum === '' && calcInfo.storedNum === ''){
+    else if (calcInfo.operator != '' && calcInfo.secondNum === null && calcInfo.storedNum === ''){ //will remove the previous operation on this display and add the new one.
+        console.log(calcInfo.firstNum + calcInfo.operator + calcInfo.secondNum);
         calcInfo.operator = this.textContent;
-        display.textContent = display.textContent.slice(0,-1) + calcInfo.operator; //will remove the previous operation on this display and add the new one.
+        display.textContent = display.textContent.slice(0,-1) + calcInfo.operator; 
     }
-    else if (calcInfo.operator != '' && calcInfo.storedNum != '') { //will calculate previous statement and assign current operator
+    else if (calcInfo.operator != '' && calcInfo.storedNum != null) { //will calculate previous statement and assign current operator, allowing user to continue string of operations.
         operate(calcInfo.operator);
         calcInfo.operator = this.textContent;
-        console.log(calcInfo.operator);
         display.textContent += calcInfo.operator;
     }
     
